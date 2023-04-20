@@ -18,11 +18,8 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'second_last_name' => fake()->lastName(),
+            'full_name' => fake()->firstName() . ' ' . fake()->lastName(),
             'phone_number' => fake()->phoneNumber(),
-            'subject' => fake()->jobTitle(),
             'message' => fake()->paragraph(),
         ];
     }

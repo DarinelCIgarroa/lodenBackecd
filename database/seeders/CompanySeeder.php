@@ -16,6 +16,7 @@ class CompanySeeder extends Seeder
         Company::create([
             'name' => 'Loden',
             'address' => 'CDMX',
+            'email' => 'loden@loden.com',
             'phone_number' => '5598237840',
         ]);
     }
