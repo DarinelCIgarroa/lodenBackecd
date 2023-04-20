@@ -2,17 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
-class CompanyConwtroller extends Controller
+class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        try {
+            $companies = Company::select('id', 'name', 'address', 'phone_number', 'email', 'logo')->get();
+
+            return response()->json([
+                'messages' => $companies,
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
     }
 
     /**
@@ -28,7 +42,22 @@ class CompanyConwtroller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $company = new Company();
+            $company->fill($request->all());
+            $company->save();
+
+            return response()->json([
+                'messages' => $company,
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
     }
 
     /**
@@ -44,7 +73,18 @@ class CompanyConwtroller extends Controller
      */
     public function edit(Company $company)
     {
-        //
+        try {
+            return response()->json([
+                'messages' => $company,
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
     }
 
     /**
@@ -52,7 +92,20 @@ class CompanyConwtroller extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        try {
+            $company->fill($request->all());
+            $company->save();
+            return response()->json([
+                'messages' => $company,
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
     }
 
     /**
@@ -60,6 +113,17 @@ class CompanyConwtroller extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        try {
+            $company->delete();
+            return response()->json([
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
     }
 }
