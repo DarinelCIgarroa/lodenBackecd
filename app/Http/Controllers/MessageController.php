@@ -14,7 +14,7 @@ class MessageController extends Controller
     public function index()
     {
         try {
-            $messages = Message::select('id', 'full_name', 'phone_number', 'message')->get();
+            $messages = Message::select('id', 'full_name', 'phone_number', 'message','mail')->get();
 
             return response()->json([
                 'messages' => $messages,
