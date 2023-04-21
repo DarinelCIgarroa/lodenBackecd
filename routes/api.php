@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\MessageController;
 
 /*
@@ -20,9 +21,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/test', function () {
-    return 'hola';
-});
-
 Route::resource('message', MessageController::class);
 Route::resource('company', CompanyController::class);
+Route::resource('events',EventController::class);
+
+Route::get('email-test', function(){
+
+    $details['email'] = 'Emmanuelarcos.97@gmail.com';
+
+    dispatch(new App\Jobs\SendEmailJob($details));
+
+    dd('done');
+});
+
