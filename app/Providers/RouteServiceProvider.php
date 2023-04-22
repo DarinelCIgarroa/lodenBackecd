@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
+use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -27,9 +28,11 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            Route::prefix('api')->middleware('api')
+                ->namespace($this->namespace)
+                ->group(function (){
+                    $this->requireRoutes('routes/api');
+                });
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
@@ -39,10 +42,21 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Configure the rate limiters for the application.
      */
-    protected function configureRateLimiting(): void
+    protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(60);
         });
+    }
+
+    public function requireRoutes($path)
+    {
+        return collect(
+            Finder::create()->in(base_path($path))->name('*.php')
+        )->each(
+            function ($file) {
+                include $file->getRealPath();
+            }
+        );
     }
 }
