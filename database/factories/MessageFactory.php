@@ -20,6 +20,7 @@ class MessageFactory extends Factory
         return [
             'full_name' => fake()->firstName() . ' ' . fake()->lastName(),
             'phone_number' => fake()->phoneNumber(),
+            'mail' => fake()->email(),
             'message' => fake()->paragraph(),
         ];
     }
