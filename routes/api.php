@@ -25,7 +25,7 @@ Route::resource('message', MessageController::class);
 Route::resource('company', CompanyController::class);
 Route::resource('events',EventController::class);
 
-Route::get('email-test', function(){
+Route::get('email', function(){
 
     $details['email'] = 'Emmanuelarcos.97@gmail.com';
 
