@@ -18,11 +18,11 @@ class SendEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    protected $text;
-    public function __construct($text)
+    protected $data;
+
+    public function __construct($data)
     {
-        $this->text = $text;
-        //
+        $this->data = $data;
     }
 
     /**
@@ -30,19 +30,7 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mail = new SendEmail();
-        Mail::to ($this->text['email'])->send($mail);
-        //
+        Mail::to($this->data['email'])->send(new SendEmail($this->data));
     }
-    /**
-     *
-     *  public function handle(): void
-    {
-       // $mail = new SendEmail();
-        //dd($this->text['image_base64']);
-        //Mail::to ($this->text['email'])->send($mail);
-        Mail::to($this->text['email'])->send(new SendEmail($this->text));
-        //
-    }
-     */
+
 }
