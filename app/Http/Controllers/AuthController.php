@@ -86,9 +86,12 @@ class AuthController extends Controller
         try {
             $user = User::find($id);
             $user->tokens()->delete();
+
             return response()->json([
+                'user' => $user,
                 'success' => true
-            ]);
+            ], 200);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' =>  $e->getMessage(),
