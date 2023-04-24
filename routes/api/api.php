@@ -22,3 +22,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout/{id}', [AuthController::class, 'logout']);
 });
 
+Route::get('email-test', function(){
+
+    $details['email'] = 'Emmanuelarcos.97@gmail.com';
+
+    dispatch(new App\Jobs\SendEmailJob($details));
+
+    dd('done');
+});
+
+

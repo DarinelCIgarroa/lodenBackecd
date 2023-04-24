@@ -31,11 +31,4 @@ Route::middleware('auth:sanctum')->group(function () {
             '' => 'company'
         ]);
     });
-
-    Route::get('email-test', function () {
-        $details['email'] = 'Emmanuelarcos.97@gmail.com';
-        dispatch(new App\Jobs\SendEmailJob($details));
-        dd('done');
-    });
-
 });
