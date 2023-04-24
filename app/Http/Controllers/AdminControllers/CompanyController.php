@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AdminControllers;
 
-use App\Models\Event;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Company;
+use Illuminate\Http\Request;
 
-class EventController extends Controller
+class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,16 +15,16 @@ class EventController extends Controller
     public function index()
     {
         try {
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->get();
+            $companies = Company::select('id', 'name', 'address', 'phone_number', 'email', 'logo')->get();
+
             return response()->json([
-                'events' => $events,
+                'messages' => $companies,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al obteber los eventos',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'success' => false
             ], 404);
         }
@@ -43,19 +44,18 @@ class EventController extends Controller
     public function store(Request $request)
     {
         try {
-            $event = new Event();
-            $event->fill($request->all());
-            $event->save();
+            $company = new Company();
+            $company->fill($request->all());
+            $company->save();
 
             return response()->json([
-                'event' => $event,
+                'messages' => $company,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al crear el evento',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'success' => false
             ], 404);
         }
@@ -64,7 +64,7 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Event $event)
+    public function show(Company $company)
     {
         //
     }
@@ -72,29 +72,38 @@ class EventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Event $event)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Event $event)
+    public function edit(Company $company)
     {
         try {
-            $event->fill($request->all());
-            $event->save();
-
             return response()->json([
-                'event' => $event,
+                'messages' => $company,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al actulizar el evento',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Company $company)
+    {
+        try {
+            $company->fill($request->all());
+            $company->save();
+            return response()->json([
+                'messages' => $company,
+                'success' => true
+            ], 202);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
                 'success' => false
             ], 404);
         }
@@ -103,19 +112,17 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Event $event)
+    public function destroy(Company $company)
     {
         try {
-            $event->delete();
-
+            $company->delete();
             return response()->json([
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al eliminar el evento',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'success' => false
             ], 404);
         }

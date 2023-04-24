@@ -22,3 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout/{id}', [AuthController::class, 'logout']);
 });
 
+Route::get('/send-email/client', [HomeMessageController::class, 'logout']);
+
+

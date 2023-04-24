@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+namespace App\Http\Controllers\AdminControllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
