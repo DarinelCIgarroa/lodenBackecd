@@ -27,10 +27,26 @@ Route::resource('events',EventController::class);
 
 Route::get('email', function(){
 
-    $details['email'] = 'Emmanuelarcos.97@gmail.com';
+    $details['email'] = 'emmanuelarcos.97@gmail.com';
 
     dispatch(new App\Jobs\SendEmailJob($details));
 
     dd('done');
 });
 
+/**
+ *
+Route::get('email', function(){
+    $image_path = public_path('img/atent.png'); // Ruta a tu imagen dentro de la carpeta public
+    $image_content = file_get_contents($image_path);
+    $image_base64 = base64_encode($image_content);
+    $details['email'] = 'Emmanuelarcos.97@gmail.com';
+    $details['image_base64'] =$image_base64;
+
+
+    dispatch(new App\Jobs\SendEmailJob($details));
+
+    dd('done');
+});
+
+ */
