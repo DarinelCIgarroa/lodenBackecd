@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -39,9 +40,9 @@ class AuthController extends Controller
 
             return response()->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer']);
         } catch (Exception $e) {
-            dd($e);
             DB::rollBack();
             return response()->json([
+                'message' =>  $e->getMessage(),
                 'success' => false,
             ], 400);
         }
@@ -50,22 +51,31 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            if (!Auth::attempt($request->only('email', 'password'))) {
-                return response()->json([
-                    'message' => 'Los datos no coincidenn con nuestros registros'
-                ], 401);
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['Las credenciales registradas no coinciden con nuestros registros.'],
+                ]);
             }
 
-            $user = User::where('email', $request['email'])->firstOrFail();
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('auth:token')->plainTextToken;
 
             return response()->json([
+                'message' => 'Sesión iniciada con éxito',
+                'success' => true,
                 'user' => $user,
-                'accessToken' => $token,
-                'token_type' => 'Bearer',
+                'token' => $token
             ]);
+
         } catch (Exception $e) {
             return response()->json([
+                'message' =>  $e->getMessage(),
                 'success' => false,
             ], 400);
         }
@@ -76,11 +86,15 @@ class AuthController extends Controller
         try {
             $user = User::find($id);
             $user->tokens()->delete();
+
             return response()->json([
+                'user' => $user,
                 'success' => true
-            ]);
+            ], 200);
+
         } catch (Exception $e) {
             return response()->json([
+                'message' =>  $e->getMessage(),
                 'success' => false
             ]);
         }

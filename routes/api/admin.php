@@ -16,17 +16,26 @@ use App\Http\Controllers\MessageController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('message', MessageController::class);
-    Route::resource('company', CompanyController::class);
+
+    // Route::resource('message', MessageController::class);
+    Route::group(['prefix' => 'message'], function () {
+        Route::resource('', MessageController::class)->parameters([
+            '' => 'message'
+        ]);
+    });
+
+    Route::group(['prefix' => 'company'], function () {
+        Route::resource('', CompanyController::class)->parameters([
+            '' => 'company'
+        ]);
+    });
+
+    Route::get('email-test', function () {
+        $details['email'] = 'Emmanuelarcos.97@gmail.com';
+        dispatch(new App\Jobs\SendEmailJob($details));
+        dd('done');
+    });
+
 });
-
-Route::get('email-test', function(){
-
-    $details['email'] = 'Emmanuelarcos.97@gmail.com';
-
-    dispatch(new App\Jobs\SendEmailJob($details));
-
-    dd('done');
-});
-
