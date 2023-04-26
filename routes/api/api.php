@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\HomeControllers\HomeMessageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,6 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout/{id}', [AuthController::class, 'logout']);
 });
 
-Route::get('/send-email/client', [HomeMessageController::class, 'logout']);
+Route::post('/send-email/client', [HomeMessageController::class, 'sedEmailClient']);
 
 
