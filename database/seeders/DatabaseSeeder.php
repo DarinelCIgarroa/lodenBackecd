@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Event;
 use App\Models\User;
 use App\Models\Message;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory(10)->create();
+        Event::factory(10)->create();
         Message::factory(10)->create();
     }
 }

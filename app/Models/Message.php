@@ -10,10 +10,10 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'last_name',
-        'second_last_name',
+        'full_name',
         'phone_number',
-        'message'
+        'mail',
+        'message',
+        'event_id'
     ];
 }
