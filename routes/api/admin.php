@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminControllers\TeamController;
 use App\Http\Controllers\AdminControllers\CompanyController;
 use App\Http\Controllers\AdminControllers\MessageController;
 
@@ -27,6 +28,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('', CompanyController::class)->parameters([
             '' => 'company'
         ]);
+    });
+
+    Route::group(['prefix' => 'team'], function () {
+        Route::controller(TeamController::class)->group(function () {
+            Route::post('/index', 'index');
+            Route::post('', 'store');
+            Route::patch('/{team}', 'update');
+            Route::delete('', 'destroy');
+        });
     });
 
 });
