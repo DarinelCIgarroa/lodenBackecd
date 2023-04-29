@@ -13,6 +13,7 @@ class Message extends Model
         'full_name',
         'phone_number',
         'mail',
-        'message'
+        'message',
+        'event_id'
     ];
 }

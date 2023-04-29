@@ -22,6 +22,7 @@ class MessageFactory extends Factory
             'phone_number' => fake()->phoneNumber(),
             'mail' => fake()->email(),
             'message' => fake()->paragraph(),
+            'event_id' =>fake()->numberBetween(1, 10),
         ];
     }
 }
