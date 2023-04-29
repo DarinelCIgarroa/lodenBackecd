@@ -20,6 +20,7 @@ class SendEmail extends Mailable
     public function __construct($data)
     {
         $this->message = $data;
+
     }
 
     /**
@@ -37,7 +38,9 @@ class SendEmail extends Mailable
      */
     public function content(): Content
     {
-        return (new Content)->view('mail')->with('message', $this->message);
+      //  return (new Content)->view('mail')->with('message', $this->message);
+        return (new Content)->view('mail')->with('data', $this->message);
+        //->with('details', $this->details);
     }
 
     /**

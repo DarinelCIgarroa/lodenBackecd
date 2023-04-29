@@ -23,6 +23,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout/{id}', [AuthController::class, 'logout']);
 });
 
-Route::get('/send-email/client', [HomeMessageController::class, 'logout']);
 
+Route::group(['prefix' => 'message'], function () {
+    Route::controller(HomeMessageController::class)->group(function () {
+        Route::post('/send-email/client','sedEmailClient');
 
+    });
+});
+Route::group(['prefix' => 'event'], function () {
+    Route::controller(HomeMessageController::class)->group(function () {
+        Route::get('/get-event', 'getEvents');
+        Route::get('/get-events', 'allEvents');
+    });
+});
