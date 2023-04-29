@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory(10)->create();
-        Message::factory(500)->create();
-        Team::factory(20);
+        Message::factory(10)->create();
+        Team::factory(5)->create();
     }
 }

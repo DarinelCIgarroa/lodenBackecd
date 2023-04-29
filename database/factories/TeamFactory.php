@@ -22,10 +22,10 @@ class TeamFactory extends Factory
             'second_last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'phone_number' => fake()->phoneNumber(),
-            'instagram_link' => fake()->link(),
-            'facebook_link' => fake()->link(),
-            'text' => fake()->text(),
-            'occupation' => fake()->profession(),
+            'instagram_link' => fake()->url(),
+            'facebook_link' => fake()->url(),
+            'intro' => fake()->text(20),
+            'occupation' => fake()->jobTitle(),
         ];
     }
 

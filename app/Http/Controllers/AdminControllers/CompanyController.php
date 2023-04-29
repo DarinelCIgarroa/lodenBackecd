@@ -18,7 +18,15 @@ class CompanyController extends Controller
             $companies = Company::select('id', 'name', 'address', 'phone_number', 'email', 'logo')->get();
 
             return response()->json([
-                'messages' => $companies,
+                'pagination' => [
+                    'total' => $companies->total(),
+                    'current_page' => $companies->currentPage(),
+                    'per_page' => $companies->perPage(),
+                    'last_page' => $companies->lastPage(),
+                    'from' => $companies->firstItem(),
+                    'to' => $companies->lastPage(),
+                ],
+                'companies' => $companies,
                 'success' => true
             ], 202);
 

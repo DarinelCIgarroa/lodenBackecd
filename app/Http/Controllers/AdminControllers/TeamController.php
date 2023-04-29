@@ -12,18 +12,31 @@ class TeamController extends Controller
      /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $Teams = Team::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->get();
+
+            $rows_page = $request->rows_page;
+            // return $test;
+            $teams = Team::select('id', 'name', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
+                ->paginate($rows_page);
+
             return response()->json([
-                'Teams' => $Teams,
+                'pagination' => [
+                    'total' => $teams->total(),
+                    'current_page' => $teams->currentPage(),
+                    'per_page' => $teams->perPage(),
+                    'last_page' => $teams->lastPage(),
+                    'from' => $teams->firstItem(),
+                    'to' => $teams->lastPage(),
+                ],
+                'members' => $teams,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al obteber los Teamos',
+                'message' => 'Error al obtener los registros',
                 'error' => $e->getMessage(),
                 'success' => false
             ], 404);
@@ -49,13 +62,13 @@ class TeamController extends Controller
             $Team->save();
 
             return response()->json([
-                'Team' => $Team,
+                'member' => $Team,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al crear el Teamo',
+                'message' => 'Error al crear el registro',
                 'error' => $e->getMessage(),
                 'success' => false
             ], 404);
@@ -88,13 +101,13 @@ class TeamController extends Controller
             $Team->save();
 
             return response()->json([
-                'Team' => $Team,
+                'member' => $Team,
                 'success' => true
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al actulizar el Teamo',
+                'message' => 'Error al actulizar el registro',
                 'error' => $e->getMessage(),
                 'success' => false
             ], 404);
@@ -115,7 +128,7 @@ class TeamController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Error al eliminar el Teamo',
+                'message' => 'Error al eliminar el registro',
                 'error' => $e->getMessage(),
                 'success' => false
             ], 404);
