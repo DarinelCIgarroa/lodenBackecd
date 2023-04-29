@@ -18,7 +18,7 @@ class SendEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    protected $data;
+    private  $data;
 
     public function __construct($data)
     {
@@ -30,7 +30,7 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->data['email'])->send(new SendEmail($this->data));
+        Mail::to($this->data['mail'])->send(new SendEmail($this->data));
     }
 
 }
