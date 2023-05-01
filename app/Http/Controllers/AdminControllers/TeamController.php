@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\AdminControllers;
-use App\Models\Team;
+use Exception;
 
+use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTeamRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TeamController extends Controller
@@ -17,7 +19,6 @@ class TeamController extends Controller
         try {
 
             $rows_page = $request->rows_page;
-            // return $test;
             $teams = Team::select('id', 'name', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
                 ->paginate($rows_page);
 
@@ -54,19 +55,20 @@ class TeamController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTeamRequest $request)
     {
         try {
-            $Team = new Team();
-            $Team->fill($request->all());
-            $Team->save();
+            $team = new team();
+            $team->fill($request->all());
+            $team->save();
 
             return response()->json([
-                'member' => $Team,
+                'message' => 'Registro creado con éxito',
+                'integrant' => $team,
                 'success' => true
             ], 202);
 
-        } catch (ModelNotFoundException $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al crear el registro',
                 'error' => $e->getMessage(),
@@ -94,14 +96,14 @@ class TeamController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Team $Team)
+    public function update(Request $request, Team $team)
     {
         try {
-            $Team->fill($request->all());
-            $Team->save();
+            $team->fill($request->all());
+            $team->save();
 
             return response()->json([
-                'member' => $Team,
+                'integrant' => $team,
                 'success' => true
             ], 202);
 
@@ -117,12 +119,13 @@ class TeamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Team $Team)
+    public function destroy(Team $team)
     {
         try {
-            $Team->delete();
+            $team->delete();
 
             return response()->json([
+                'integrant' => $team,
                 'success' => true
             ], 202);
 
