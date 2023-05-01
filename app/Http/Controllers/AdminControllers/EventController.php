@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -30,6 +31,7 @@ class EventController extends Controller
         }
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -46,6 +48,16 @@ class EventController extends Controller
         try {
             $event = new Event();
             $event->fill($request->all());
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png',
+            ]);
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $path = $image->store('public/images');
+                $url = str_replace("public", "", $path);
+                $event->image = $url;
+            }
             $event->save();
 
             return response()->json([
@@ -120,5 +132,8 @@ class EventController extends Controller
                 'success' => false
             ], 404);
         }
+    }
+    public function getEventImage(){
+
     }
 }

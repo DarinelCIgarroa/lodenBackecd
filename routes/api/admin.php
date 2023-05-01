@@ -30,11 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
             '' => 'company'
         ]);
     });
-    Route::group(['prefix' => 'event'], function () {
-        Route::resource('', EventController::class)->parameters([
-            '' => 'event'
-        ]);
-    });
+
 
     Route::group(['prefix' => 'team'], function () {
         Route::controller(TeamController::class)->group(function () {
@@ -44,5 +40,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('', 'destroy');
         });
     });
+Route::group(['prefix' => 'event'], function () {
+        Route::resource('', EventController::class)->parameters([
+            '' => 'event'
+        ]);
 
+    });
 });
+
+
