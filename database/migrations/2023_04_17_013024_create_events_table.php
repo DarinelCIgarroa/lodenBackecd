@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('city');
             $table->boolean('status');
-            $table->string('tipe');
+            $table->string('type');
             $table->string('image');
             $table->timestamps();
         });

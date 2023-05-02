@@ -27,7 +27,7 @@ class EventFactory extends Factory
             'city'=>fake()->word(),
             'image'=>fake()->image(null, 360, 360, 'animals', true),
             'status'=> true,
-            'tipe'=>fake()->randomElement(['home', 'presencial']),
+            'type'=>fake()->randomElement(['home', 'presencial']),
         ];
     }
 }
