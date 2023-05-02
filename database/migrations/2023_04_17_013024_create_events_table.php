@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('city');
             $table->boolean('status');
             $table->string('tipe');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

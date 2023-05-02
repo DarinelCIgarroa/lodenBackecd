@@ -41,9 +41,13 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 Route::group(['prefix' => 'event'], function () {
-        Route::resource('', EventController::class)->parameters([
-            '' => 'event'
-        ]);
+        Route::controller(EventController::class)->group(function () {
+            Route::post('/index', 'index');
+            Route::patch('/{team}', 'update');
+            Route::post('', 'store');
+            Route::delete('/{team}', 'destroy');
+        });
+
 
     });
 });

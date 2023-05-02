@@ -13,10 +13,11 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->get();
+            $rows_page = $request->rows_page;
+            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->paginate($rows_page);
             return response()->json([
                 'events' => $events,
                 'success' => true
@@ -48,10 +49,7 @@ class EventController extends Controller
         try {
             $event = new Event();
             $event->fill($request->all());
-
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png',
-            ]);
+            $event->status=$request->status["code"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $path = $image->store('public/images');
@@ -62,6 +60,7 @@ class EventController extends Controller
 
             return response()->json([
                 'event' => $event,
+                'message' => 'asdfsfsdfsd dfsd sd',
                 'success' => true
             ], 202);
 

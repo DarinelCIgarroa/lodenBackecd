@@ -23,14 +23,6 @@ class TeamController extends Controller
                 ->paginate($rows_page);
 
             return response()->json([
-                'pagination' => [
-                    'total' => $teams->total(),
-                    'current_page' => $teams->currentPage(),
-                    'per_page' => $teams->perPage(),
-                    'last_page' => $teams->lastPage(),
-                    'from' => $teams->firstItem(),
-                    'to' => $teams->lastPage(),
-                ],
                 'members' => $teams,
                 'success' => true
             ], 202);
