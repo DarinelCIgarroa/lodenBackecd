@@ -20,9 +20,12 @@ use App\Http\Controllers\AdminControllers\MessageController;
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'message'], function () {
-        Route::resource('', MessageController::class)->parameters([
-            '' => 'message'
-        ]);
+        Route::controller(MessageController::class)->group(function () {
+            Route::post('/index', 'index');
+            Route::patch('/{message}', 'update');
+            Route::post('', 'store');
+            Route::delete('/{message}', 'destroy');
+        });
     });
 
     Route::group(['prefix' => 'company'], function () {

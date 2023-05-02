@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
@@ -16,4 +17,8 @@ class Message extends Model
         'message',
         'event_id'
     ];
+
+    public function event() {
+        return $this->belongsTo(Event::class);
+    }
 }

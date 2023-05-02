@@ -27,6 +27,6 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         Team::factory(20)->create();
         Event::factory(10)->create();
-        Message::factory(10)->create();
+        Message::factory(20)->create();
     }
 }
