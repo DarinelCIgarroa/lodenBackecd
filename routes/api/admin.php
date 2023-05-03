@@ -20,15 +20,21 @@ use App\Http\Controllers\AdminControllers\MessageController;
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['prefix' => 'message'], function () {
-        Route::resource('', MessageController::class)->parameters([
-            '' => 'message'
-        ]);
+        Route::controller(MessageController::class)->group(function () {
+            Route::post('/index', 'index');
+            Route::patch('/{message}', 'update');
+            Route::post('', 'store');
+            Route::delete('/{message}', 'destroy');
+        });
     });
 
     Route::group(['prefix' => 'company'], function () {
-        Route::resource('', CompanyController::class)->parameters([
-            '' => 'company'
-        ]);
+        Route::controller(CompanyController::class)->group(function () {
+            Route::get('', 'index');
+            Route::patch('/{company}', 'update');
+            Route::post('', 'store');
+            Route::delete('/{company}', 'destroy');
+        });
     });
 
 

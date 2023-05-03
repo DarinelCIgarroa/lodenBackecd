@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Message;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
@@ -18,6 +20,10 @@ class Event extends Model
         'city',
         'image',
         'status',
-        'tipe',
+        'type',
     ];
+
+    public function Messages() {
+        return $this->hasMany(Message::class);
+    }
 }

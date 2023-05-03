@@ -15,9 +15,13 @@ class CompanySeeder extends Seeder
     {
         Company::create([
             'name' => 'Loden',
+            'city' => 'Ciudad de méxico',
+            'state' => 'Ciudad de méxico',
+            'zip_code' => '9312',
+            'country' => 'México',
             'address' => 'CDMX',
+            'phone_number' => '55982 37840',
             'email' => 'loden@loden.com',
-            'phone_number' => '5598237840',
         ]);
     }
 }

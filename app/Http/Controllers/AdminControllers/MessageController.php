@@ -12,16 +12,20 @@ class MessageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $messages = Message::select('id', 'full_name', 'phone_number', 'message', 'mail')->get();
+            $rows_page = $request->rows_page;
+
+            $messages = Message::with(['event' => function ($query) {
+                $query->select('id', 'name', 'start_date', 'end_date');
+            }])->select('id', 'full_name', 'phone_number', 'message', 'mail', 'event_id', 'created_at')
+                ->paginate($rows_page);
 
             return response()->json([
                 'messages' => $messages,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -52,7 +56,6 @@ class MessageController extends Controller
                 'message' => $message,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -90,7 +93,6 @@ class MessageController extends Controller
                 'message' => $message,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al actulizar el mensaje',
@@ -109,12 +111,13 @@ class MessageController extends Controller
             $message->delete();
 
             return response()->json([
+                'message' => 'Registro elimnado con exito',
+                'messageItem' => $message,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'No se encontró el mensaje con el ID proporcionado',
+                'message' => 'Error al eliminar el registro',
                 'error' => $e->getMessage(),
                 'success' => false
             ], 404);
