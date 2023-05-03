@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\AdminControllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CompanyController extends Controller
 {
@@ -15,21 +17,23 @@ class CompanyController extends Controller
     public function index()
     {
         try {
-            $companies = Company::select('id', 'name', 'address', 'phone_number', 'email', 'logo')->get();
+            $company = Company::select(
+                'id',
+                'name',
+                'city',
+                'state',
+                'zip_code',
+                'country',
+                'address',
+                'phone_number',
+                'email',
+                'logo'
+            )->first();
 
             return response()->json([
-                'pagination' => [
-                    'total' => $companies->total(),
-                    'current_page' => $companies->currentPage(),
-                    'per_page' => $companies->perPage(),
-                    'last_page' => $companies->lastPage(),
-                    'from' => $companies->firstItem(),
-                    'to' => $companies->lastPage(),
-                ],
-                'companies' => $companies,
+                'company' => $company,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -52,15 +56,25 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         try {
-            $company = new Company();
+            DB::beginTransaction();
+
+            $company = Company::first() ?? new Company();
             $company->fill($request->all());
+
+            if ($request->hasFile('image')) {
+                Storage::disk('images')->delete($company->logo);
+                $path = $request->file('image')->store('company', 'images');
+                $company->logo = $path;
+            }
+
             $company->save();
+            DB::commit();
 
             return response()->json([
-                'messages' => $company,
+                'company' => $company,
+                'message' => 'El registro se agregó con éxito',
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -87,7 +101,6 @@ class CompanyController extends Controller
                 'messages' => $company,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -108,7 +121,6 @@ class CompanyController extends Controller
                 'messages' => $company,
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -127,7 +139,6 @@ class CompanyController extends Controller
             return response()->json([
                 'success' => true
             ], 202);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),

@@ -29,9 +29,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'company'], function () {
-        Route::resource('', CompanyController::class)->parameters([
-            '' => 'company'
-        ]);
+        Route::controller(CompanyController::class)->group(function () {
+            Route::get('', 'index');
+            Route::patch('/{company}', 'update');
+            Route::post('', 'store');
+            Route::delete('/{company}', 'destroy');
+        });
     });
     Route::group(['prefix' => 'event'], function () {
         Route::resource('', EventController::class)->parameters([
@@ -47,5 +50,4 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{team}', 'destroy');
         });
     });
-
 });
