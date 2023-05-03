@@ -6,16 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->get();
+            $rows_page = $request->rows_page;
+            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->paginate($rows_page);
             return response()->json([
                 'events' => $events,
                 'success' => true
@@ -29,6 +31,7 @@ class EventController extends Controller
             ], 404);
         }
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,10 +49,18 @@ class EventController extends Controller
         try {
             $event = new Event();
             $event->fill($request->all());
+            $event->status=$request->status["code"];
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $path = $image->store('public/images');
+                $url = str_replace("public", "", $path);
+                $event->image = $url;
+            }
             $event->save();
 
             return response()->json([
                 'event' => $event,
+                'message' => 'asdfsfsdfsd dfsd sd',
                 'success' => true
             ], 202);
 
@@ -120,5 +131,8 @@ class EventController extends Controller
                 'success' => false
             ], 404);
         }
+    }
+    public function getEventImage(){
+
     }
 }
