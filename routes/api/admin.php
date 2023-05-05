@@ -49,9 +49,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::group(['prefix' => 'event'], function () {
         Route::controller(EventController::class)->group(function () {
             Route::post('/index', 'index');
-            Route::patch('/{team}', 'update');
+            Route::post('/{event}', 'update');
             Route::post('', 'store');
-            Route::delete('/{team}', 'destroy');
+            Route::delete('/{event}', 'destroy');
         });
 
 
