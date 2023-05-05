@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeControllers\HomeMessageController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\HomeControllers\HomeMessageController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
-	Route::post('/login', 'login');
+    Route::post('/login', 'login');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -26,7 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::group(['prefix' => 'message'], function () {
     Route::controller(HomeMessageController::class)->group(function () {
         Route::post('/send-email/client', 'sedEmailClient');
-
     });
 });
 
@@ -34,5 +34,11 @@ Route::group(['prefix' => 'event'], function () {
     Route::controller(HomeMessageController::class)->group(function () {
         Route::get('/get-event', 'getEvents');
         Route::get('/get-events', 'allEvents');
+    });
+});
+
+Route::group(['prefix' => 'home'], function () {
+    Route::controller(HomeMessageController::class)->group(function () {
+        Route::get('/company', 'getDataHomeCompany');
     });
 });
