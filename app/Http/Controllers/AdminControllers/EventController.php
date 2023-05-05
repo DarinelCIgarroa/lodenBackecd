@@ -52,15 +52,14 @@ class EventController extends Controller
             $event->status=$request->status["code"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $path = $image->store('public/images');
-                $url = str_replace("public", "", $path);
-                $event->image = $url;
+                $path = $image->store('','events');
+                $event->image = $path;
             }
             $event->save();
 
             return response()->json([
                 'event' => $event,
-                'message' => 'El registro se agregó con éxito',
+                'message' => 'asdfsfsdfsd dfsd sd',
                 'success' => true
             ], 202);
 
@@ -95,13 +94,23 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         try {
-           // return $request->all();
+
             $event->fill($request->all());
+            $event->status=$request->status["code"];
+            if($request->file('image')){
+                if( !is_string($request->image ) ){
+                Storage::disk('events')->delete($event->image);
+              }
+              $image = $request->file('image');
+              $path = $image->store('','events');
+              $event->image = $path;
+            }
             $event->save();
+
             return response()->json([
                 'event' => $event,
-                'message' => 'Se actualizo el registro',
-                'success' => true
+                'success' => true,
+                'message'=>"El registro se agregó con éxito"
             ], 202);
 
         } catch (ModelNotFoundException $e) {
@@ -119,12 +128,12 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
-
-            $event->delete();
+            if( $event->image !=null){
+              Storage::disk('events')->delete($event->image);
+            }
+          $event->delete();
 
             return response()->json([
-                'event'=>$event,
-                'message' => 'Se elimino el registro con éxito',
                 'success' => true
             ], 202);
 
