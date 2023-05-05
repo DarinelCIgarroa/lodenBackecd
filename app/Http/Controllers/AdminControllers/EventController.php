@@ -17,7 +17,7 @@ class EventController extends Controller
     {
         try {
             $rows_page = $request->rows_page;
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->paginate($rows_page);
+            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image','type')->paginate($rows_page);
             return response()->json([
                 'events' => $events,
                 'success' => true
@@ -52,9 +52,8 @@ class EventController extends Controller
             $event->status=$request->status["code"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $path = $image->store('public/images');
-                $url = str_replace("public", "", $path);
-                $event->image = $url;
+                $path = $image->store('','events');
+                $event->image = $path;
             }
             $event->save();
 
@@ -95,12 +94,23 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         try {
+
             $event->fill($request->all());
+            $event->status=$request->status["code"];
+            if($request->file('image')){
+                if( !is_string($request->image ) ){
+                Storage::disk('events')->delete($event->image);
+              }
+              $image = $request->file('image');
+              $path = $image->store('','events');
+              $event->image = $path;
+            }
             $event->save();
 
             return response()->json([
                 'event' => $event,
-                'success' => true
+                'success' => true,
+                'message'=>"El registro se agregó con éxito"
             ], 202);
 
         } catch (ModelNotFoundException $e) {
@@ -118,7 +128,10 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
-            $event->delete();
+            if( $event->image !=null){
+              Storage::disk('events')->delete($event->image);
+            }
+          $event->delete();
 
             return response()->json([
                 'success' => true
