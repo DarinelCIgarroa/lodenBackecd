@@ -59,7 +59,7 @@ class EventController extends Controller
 
             return response()->json([
                 'event' => $event,
-                'message' => 'El registro se agregó con éxito',
+                'message' => 'asdfsfsdfsd dfsd sd',
                 'success' => true
             ], 202);
 
@@ -105,6 +105,7 @@ class EventController extends Controller
               $event->image = $path;
             }
             $event->save();
+
             return response()->json([
                 'event' => $event,
                 'success' => true,
@@ -132,8 +133,6 @@ class EventController extends Controller
           $event->delete();
 
             return response()->json([
-                'event'=>$event,
-                'message' => 'Se elimino el registro con éxito',
                 'success' => true
             ], 202);
 
