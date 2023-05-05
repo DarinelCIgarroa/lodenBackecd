@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('mail');
             $table->text('message');
             $table->timestamps();
-            $table->foreign('event_id')->references('id')->on('events');
+            $table->foreign('event_id')->references('id')->on('events')->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 

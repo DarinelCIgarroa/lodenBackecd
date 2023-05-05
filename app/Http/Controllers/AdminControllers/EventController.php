@@ -17,7 +17,7 @@ class EventController extends Controller
     {
         try {
             $rows_page = $request->rows_page;
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image')->paginate($rows_page);
+            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image','type','status')->paginate($rows_page);
             return response()->json([
                 'events' => $events,
                 'success' => true
@@ -60,7 +60,7 @@ class EventController extends Controller
 
             return response()->json([
                 'event' => $event,
-                'message' => 'asdfsfsdfsd dfsd sd',
+                'message' => 'El registro se agregó con éxito',
                 'success' => true
             ], 202);
 
@@ -95,11 +95,12 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         try {
+           // return $request->all();
             $event->fill($request->all());
             $event->save();
-
             return response()->json([
                 'event' => $event,
+                'message' => 'Se actualizo el registro',
                 'success' => true
             ], 202);
 
@@ -118,9 +119,12 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
+
             $event->delete();
 
             return response()->json([
+                'event'=>$event,
+                'message' => 'Se elimino el registro con éxito',
                 'success' => true
             ], 202);
 
