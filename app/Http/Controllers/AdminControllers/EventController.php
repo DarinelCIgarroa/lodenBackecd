@@ -94,7 +94,6 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         try {
-
             $event->fill($request->all());
             $event->status=$request->status["code"];
             if($request->file('image')){

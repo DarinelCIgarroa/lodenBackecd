@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+
 class CompanyController extends Controller
 {
     /**
@@ -61,11 +62,15 @@ class CompanyController extends Controller
             $company = Company::first() ?? new Company();
             $company->fill($request->all());
 
-            if ($request->hasFile('image')) {
-                Storage::disk('images')->delete($company->logo);
-                $path = $request->file('image')->store('company', 'images');
-                $company->logo = $path;
+            if ($request->hasFile('logo')) {
+                Storage::disk('images')->deleteDirectory('company');
+
+                $path = $request->file('logo')->store('company', 'images');
+                $file_name = basename($path);
+
+                $company->logo = $file_name;
             }
+
 
             $company->save();
             DB::commit();
@@ -82,6 +87,7 @@ class CompanyController extends Controller
             ], 404);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -137,6 +143,23 @@ class CompanyController extends Controller
         try {
             $company->delete();
             return response()->json([
+                'success' => true
+            ], 202);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false
+            ], 404);
+        }
+    }
+
+    public function getCompanyLogo(Request $request)
+    {
+        try {
+            $url_image = $request->path;
+            $url = Storage::disk('images')->url("company/{$url_image}");
+            return response()->json([
+                'url' => $url,
                 'success' => true
             ], 202);
         } catch (ModelNotFoundException $e) {
