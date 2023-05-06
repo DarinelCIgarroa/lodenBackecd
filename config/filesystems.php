@@ -43,6 +43,14 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'users' => [ //->filesistem
+            'driver' => 'local',
+            'root' => storage_path('app/user-images'),//Es la carpeta
+            'url' => env('APP_URL') . '/images',//un enlace simbolica donde esta almacenada
+            //la ruta endonde esta el imagen
+            'visibility' => 'public',
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',
@@ -79,7 +87,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        public_path('images') => storage_path('app/public/images'),
+        public_path('images') => storage_path('app/user-images'),
+        //origen la ubicacion publica - el destino
     ],
 
 ];

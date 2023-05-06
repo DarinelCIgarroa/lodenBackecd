@@ -4,9 +4,10 @@ namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
@@ -17,21 +18,20 @@ class EventController extends Controller
     {
         try {
             $rows_page = $request->rows_page;
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image','type','status')->paginate($rows_page);
+            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')->paginate($rows_page);
             return response()->json([
                 'events' => $events,
-                'success' => true
+                'success' => true,
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al obteber los eventos',
                 'error' => $e->getMessage(),
-                'success' => false
+                'success' => false,
             ], 404);
         }
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -49,10 +49,10 @@ class EventController extends Controller
         try {
             $event = new Event();
             $event->fill($request->all());
-            $event->status=$request->status["code"];
+            $event->status = $request->status["code"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $path = $image->store('','events');
+                $path = $image->store('event-images', 'users');
                 $event->image = $path;
             }
             $event->save();
@@ -60,14 +60,14 @@ class EventController extends Controller
             return response()->json([
                 'event' => $event,
                 'message' => 'asdfsfsdfsd dfsd sd',
-                'success' => true
+                'success' => true,
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al crear el evento',
                 'error' => $e->getMessage(),
-                'success' => false
+                'success' => false,
             ], 404);
         }
     }
@@ -94,30 +94,29 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         try {
-
+            $imv = $event->image;
             $event->fill($request->all());
-            $event->status=$request->status["code"];
-            if($request->file('image')){
-                if( !is_string($request->image ) ){
-                Storage::disk('events')->delete($event->image);
-              }
-              $image = $request->file('image');
-              $path = $image->store('','events');
-              $event->image = $path;
+            if (!Str::isJson($request->status)) {
+                $event->status = $request->status["code"];
+            }
+            if ($request->hasFile('image')) {
+                Storage::disk('users')->delete($imv);
+                $image = $request->file('image');
+                $path = $image->store('event-images', 'users');
+                $event->image = $path;
             }
             $event->save();
-
             return response()->json([
                 'event' => $event,
                 'success' => true,
-                'message'=>"El registro se agregó con éxito"
+                'message' => "El registro se agregó con éxito",
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al actulizar el evento',
                 'error' => $e->getMessage(),
-                'success' => false
+                'success' => false,
             ], 404);
         }
     }
@@ -128,24 +127,27 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
-            if( $event->image !=null){
-              Storage::disk('events')->delete($event->image);
+            if ($event->image != null) {
+                Storage::disk('users')->delete($event->image);
             }
-          $event->delete();
+            $event->delete();
 
             return response()->json([
-                'success' => true
+                'event' => $event,
+                'message' => 'Registro elimnado con exito',
+                'success' => true,
             ], 202);
 
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al eliminar el evento',
                 'error' => $e->getMessage(),
-                'success' => false
+                'success' => false,
             ], 404);
         }
     }
-    public function getEventImage(){
+    public function getEventImage()
+    {
 
     }
 }
