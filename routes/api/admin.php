@@ -1,7 +1,7 @@
 <?php
-
-use App\Http\Controllers\AdminControllers\CompanyController;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\AdminControllers\EventController;
+use App\Http\Controllers\AdminControllers\CompanyController;
 use App\Http\Controllers\AdminControllers\MessageController;
 use App\Http\Controllers\AdminControllers\TeamController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::patch('/{company}', 'update');
             Route::post('', 'store');
             Route::delete('/{company}', 'destroy');
+            Route::post('/logo', 'getCompanyLogo');
         });
     });
 

@@ -43,7 +43,7 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
-        'users' => [ //->filesistem
+        'users' => [   //->filesistem
             'driver' => 'local',
             'root' => storage_path('app/user-images'),//Es la carpeta
             'url' => env('APP_URL') . '/images',//un enlace simbolica donde esta almacenada

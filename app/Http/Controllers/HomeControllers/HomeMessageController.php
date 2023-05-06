@@ -4,6 +4,7 @@ namespace App\Http\Controllers\HomeControllers;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendEmailJob;
+use App\Models\Company;
 use App\Models\Event;
 use App\Models\Message;
 use Exception;
@@ -41,7 +42,7 @@ class HomeMessageController extends Controller
     public function getEvents()
     {
         try {
-            $events = Event::select('id', 'name')->where('status','=','1')->get();
+            $events = Event::select('id', 'name')->where('status', '=', '1')->get();
             return response()->json([
                 'success' => true,
                 'events' => $events,
@@ -57,7 +58,7 @@ class HomeMessageController extends Controller
     {
         try {
             $all_events = Event::all();
-            $all_events->makeHidden(['updated_at','created_at']);
+            $all_events->makeHidden(['updated_at', 'created_at']);
             return response()->json([
                 'success' => true,
                 'events' => $all_events,
@@ -69,10 +70,27 @@ class HomeMessageController extends Controller
             ]);
         }
     }
-    public function eventsActive(){
+    public function eventsActive()
+    {
         try {
-
         } catch (ModelNotFoundException $th) {
+            return response()->json([
+                'message' => 'Error al obtener registros',
+                'success' => false,
+            ]);
+        }
+    }
+
+    public function getDataHomeCompany()
+    {
+        try {
+            $company = Company::select('name', 'logo')->first();
+
+            return response()->json([
+                'company' => $company,
+                'success' => true,
+            ], 202);
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Error al obtener registros',
                 'success' => false,
