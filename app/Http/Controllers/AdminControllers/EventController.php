@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\TryCatch;
 
 class EventController extends Controller
 {
@@ -75,9 +76,19 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Event $event)
+    public function search(Event $event,Request $request)
     {
         //
+        try {
+            //code...
+            return "ok";
+        }catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Error al crear el evento',
+                'error' => $e->getMessage(),
+                'success' => false,
+            ], 404);
+        }
     }
 
     /**
