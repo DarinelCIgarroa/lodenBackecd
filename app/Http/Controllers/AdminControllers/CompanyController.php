@@ -63,15 +63,13 @@ class CompanyController extends Controller
             $company->fill($request->all());
 
             if ($request->hasFile('logo')) {
-                Storage::disk('images')->deleteDirectory('company');
+                Storage::disk('users')->deleteDirectory('company');
 
-                $path = $request->file('logo')->store('company', 'images');
-                $file_name = basename($path);
+                $path = $request->file('logo')->store('company', 'users');
+               // $file_name = basename($path);
 
-                $company->logo = $file_name;
+                $company->logo = $path;
             }
-
-
             $company->save();
             DB::commit();
 
@@ -157,7 +155,7 @@ class CompanyController extends Controller
     {
         try {
             $url_image = $request->path;
-            $url = Storage::disk('images')->url("company/{$url_image}");
+            $url = basename(Storage::url("{$url_image}"));
             return response()->json([
                 'url' => $url,
                 'success' => true
