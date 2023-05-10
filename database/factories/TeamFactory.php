@@ -26,6 +26,7 @@ class TeamFactory extends Factory
             'facebook_link' => fake()->url(),
             'intro' => fake()->text(20),
             'occupation' => fake()->jobTitle(),
+            'image'=>'/images/DKPVp2qh2bc77noircu9VH2foC2tRUQBoMYaJw5z.png',
         ];
     }
 

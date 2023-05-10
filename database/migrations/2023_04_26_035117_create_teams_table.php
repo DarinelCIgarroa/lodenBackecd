@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('facebook_link');
             $table->string('intro', 255);
             $table->string('occupation');
-
+            $table->string('image');
             $table->timestamps();
         });
     }
