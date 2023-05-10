@@ -8,18 +8,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use PhpParser\Node\Stmt\TryCatch;
+use App\Http\Requests\SendEventRequest;
 
 class EventController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, Event $event)
     {
         try {
             $rows_page = $request->rows_page;
-            $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')->paginate($rows_page);
+            $search= $request->search;
+              $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')
+              ->search($search)
+              ->paginate($rows_page);
             return response()->json([
                 'events' => $events,
                 'success' => true,
@@ -45,7 +48,7 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SendEventRequest $request)
     {
         try {
             $event = new Event();
@@ -60,7 +63,7 @@ class EventController extends Controller
 
             return response()->json([
                 'event' => $event,
-                'message' => 'asdfsfsdfsd dfsd sd',
+                'message' => 'El registro se agregó con éxito',
                 'success' => true,
             ], 202);
 
@@ -102,7 +105,7 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Event $event)
+    public function update(SendEventRequest $request, Event $event)
     {
         try {
             $imv = $event->image;
@@ -120,7 +123,7 @@ class EventController extends Controller
             return response()->json([
                 'event' => $event,
                 'success' => true,
-                'message' => "El registro se agregó con éxito",
+                'message' => "El registro se actualizó con éxito",
             ], 202);
 
         } catch (ModelNotFoundException $e) {
