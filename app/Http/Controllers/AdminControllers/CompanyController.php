@@ -154,7 +154,7 @@ class CompanyController extends Controller
 
     public function getCompanyLogo(Request $request)
     {
-        try {//
+        try {
             $url_image = $request->path;
             $url = basename(Storage::url("{$url_image}"));
             return response()->json([

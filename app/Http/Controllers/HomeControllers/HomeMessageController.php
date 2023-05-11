@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\HomeControllers;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\SendEmailJob;
-use App\Models\Company;
+use Exception;
+use App\Models\Team;
 use App\Models\Event;
+use App\Models\Company;
 use App\Models\Message;
+use App\Jobs\SendEmailJob;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SendEmailRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 class HomeMessageController extends Controller
 {
@@ -32,10 +34,25 @@ class HomeMessageController extends Controller
             ]);
         }
     }
-    public function getEvents()
+    // public function getEvents()
+    // {
+    //     try {
+    //         $events = Event::select('id', 'name')->where('status', '=', '1')->get();
+    //         return response()->json([
+    //             'success' => true,
+    //             'events' => $events,
+    //         ], 202);
+    //     } catch (ModelNotFoundException $e) {
+    //         return response()->json([
+    //             'message' => 'Error al obtener registros',
+    //             'success' => false,
+    //         ]);
+    //     }
+    // }
+    public function getAllEvents()
     {
         try {
-            $events = Event::select('id', 'name')->where('status', '=', '1')->get();
+            $events = Event::where('status', '=', '1')->get();
             return response()->json([
                 'success' => true,
                 'events' => $events,
@@ -47,34 +64,8 @@ class HomeMessageController extends Controller
             ]);
         }
     }
-    public function allEvents()
-    {
-        try {
-            $all_events = Event::all();
-            $all_events->makeHidden(['updated_at', 'created_at']);
-            return response()->json([
-                'success' => true,
-                'events' => $all_events,
-            ], 202);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'message' => 'Error al obtener registros',
-                'success' => false,
-            ]);
-        }
-    }
-    public function eventsActive()
-    {
-        try {
-        } catch (ModelNotFoundException $th) {
-            return response()->json([
-                'message' => 'Error al obtener registros',
-                'success' => false,
-            ]);
-        }
-    }
 
-    public function getDataHomeCompany()
+    public function getHomeCompany()
     {
         try {
             $company = Company::select('name', 'logo')->first();
@@ -83,9 +74,28 @@ class HomeMessageController extends Controller
                 'company' => $company,
                 'success' => true,
             ], 202);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Error al obtener registros',
+                'success' => false,
+            ]);
+        }
+    }
+    public function getHomeMembers()
+    {
+        try {
+            $members = Team::select('name', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
+                ->limit(6)->get();
+
+            return response()->json([
+                'members' => $members,
+                'success' => true,
+            ], 202);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Éxito al obtener los registros',
                 'success' => false,
             ]);
         }
