@@ -33,12 +33,13 @@ Route::group(['prefix' => 'message'], function () {
 Route::group(['prefix' => 'event'], function () {
     Route::controller(HomeMessageController::class)->group(function () {
         Route::get('/get-event', 'getEvents');
-        Route::get('/get-events', 'allEvents');
+        Route::get('/get-events', 'getAllEvents');
     });
 });
 
 Route::group(['prefix' => 'home'], function () {
     Route::controller(HomeMessageController::class)->group(function () {
         Route::get('/company', 'getDataHomeCompany');
+        Route::get('/get-events', 'getAllEvents');
     });
 });
