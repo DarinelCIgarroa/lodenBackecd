@@ -34,22 +34,8 @@ class HomeMessageController extends Controller
             ]);
         }
     }
-    // public function getEvents()
-    // {
-    //     try {
-    //         $events = Event::select('id', 'name')->where('status', '=', '1')->get();
-    //         return response()->json([
-    //             'success' => true,
-    //             'events' => $events,
-    //         ], 202);
-    //     } catch (ModelNotFoundException $e) {
-    //         return response()->json([
-    //             'message' => 'Error al obtener registros',
-    //             'success' => false,
-    //         ]);
-    //     }
-    // }
-    public function getAllEvents()
+
+    public function getHomeAllEvents()
     {
         try {
             $events = Event::where('status', '=', '1')->get();
