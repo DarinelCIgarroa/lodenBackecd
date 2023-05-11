@@ -17,7 +17,7 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'tilte' => fake()->numerify('event_####'),
+            'title' => fake()->numerify('event_####'),
             'description' => fake()->paragraph(),
             'start_date' => fake()->date('Y-m-d', '-10 years'),
             'end_date' => fake()->date('Y-m-d', '-10 years'),
