@@ -20,6 +20,8 @@ class CompanySeeder extends Seeder
             'zip_code' => '9312',
             'country' => 'México',
             'address' => 'CDMX',
+            'instagram_link' => 'https://www.instagram.com/loden.org.mx/',
+            'facebook_link' => 'https://www.instagram.com/loden.org.mx/',
             'phone_number' => '55982 37840',
             'email' => 'loden@loden.com',
         ]);

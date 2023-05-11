@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('country');
             $table->string('address');
             $table->string('phone_number');
+            $table->string('instagram_link');
+            $table->string('facebook_link');
             $table->string('email')->unique();
             $table->binary('logo')->nullable();
             $table->timestamps();
