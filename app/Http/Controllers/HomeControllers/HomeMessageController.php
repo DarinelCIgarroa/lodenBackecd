@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\HomeControllers;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\SendEmailJob;
-use App\Models\Company;
-use App\Models\Event;
-use App\Models\Message;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Team;
+use App\Models\Event;
+use App\Models\Company;
+use App\Models\Message;
+use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HomeMessageController extends Controller
 {
@@ -70,7 +71,7 @@ class HomeMessageController extends Controller
         }
     }
 
-    public function getDataHomeCompany()
+    public function getHomeCompany()
     {
         try {
             $company = Company::select('name', 'logo')->first();
@@ -79,9 +80,28 @@ class HomeMessageController extends Controller
                 'company' => $company,
                 'success' => true,
             ], 202);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Error al obtener registros',
+                'success' => false,
+            ]);
+        }
+    }
+    public function getHomeMembers()
+    {
+        try {
+            $members = Team::select('name', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
+                ->limit(6)->get();
+
+            return response()->json([
+                'members' => $members,
+                'success' => true,
+            ], 202);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Éxito al obtener los registros',
                 'success' => false,
             ]);
         }

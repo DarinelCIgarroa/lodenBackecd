@@ -39,7 +39,8 @@ Route::group(['prefix' => 'event'], function () {
 
 Route::group(['prefix' => 'home'], function () {
     Route::controller(HomeMessageController::class)->group(function () {
-        Route::get('/company', 'getDataHomeCompany');
+        Route::get('/company', 'getHomeCompany');
         Route::get('/get-events', 'getAllEvents');
+        Route::get('/get-members', 'getHomeMembers');
     });
 });
