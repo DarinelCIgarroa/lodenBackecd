@@ -18,7 +18,7 @@ class MessageController extends Controller
             $rows_page = $request->rows_page;
 
             $messages = Message::with(['event' => function ($query) {
-                $query->select('id', 'name', 'start_date', 'end_date');
+                $query->select('id', 'title', 'start_date', 'end_date');
             }])->select('id', 'full_name', 'phone_number', 'message', 'mail', 'event_id', 'created_at')
                 ->paginate($rows_page);
 

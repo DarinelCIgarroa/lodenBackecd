@@ -55,7 +55,7 @@ class TeamController extends Controller
             $team->fill($request->all());
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $path = $image->store('team-images', 'users');
+                $path = $image->store('team', 'images');
                 $team->image = $path;
             }
             $team->save();
@@ -100,9 +100,9 @@ class TeamController extends Controller
             $imt = $team->image;
             $team->fill($request->all());
             if ($request->hasFile('image')) {
-                Storage::disk('users')->delete($imt);
+                Storage::disk('images')->delete($imt);
                 $image = $request->file('image');
-                $path = $image->store('team-images', 'users');
+                $path = $image->store('team', 'images');
                 $team->image = $path;
             }
             $team->save();
