@@ -20,7 +20,7 @@ class EventController extends Controller
         try {
             $rows_page = $request->rows_page;
             $search= $request->search;
-              $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')
+              $events = Event::select('id', 'title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')
               ->search($search)
               ->paginate($rows_page);
             return response()->json([
