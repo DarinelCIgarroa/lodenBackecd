@@ -18,7 +18,7 @@ class EventFactory extends Factory
     {
         return [
             // $faker->paragraph();
-            'name'=>fake()->numerify('event_####'),
+            'tilte'=>fake()->numerify('event_####'),
             'description'=>fake()->paragraph(),
             'start_date'=>fake()->date('Y-m-d', '-10 years'),
             'end_date' => fake()->date('Y-m-d', '-10 years'),
@@ -27,7 +27,7 @@ class EventFactory extends Factory
             'city'=>fake()->word(),
             'image'=>'/images/DKPVp2qh2bc77noircu9VH2foC2tRUQBoMYaJw5z.png',
             'status'=> true,
-            'type'=>fake()->randomElement(['home', 'presencial']),
+            'type'=>fake()->randomElement(['en-linea', 'presencial']),
         ];
     }
 }
