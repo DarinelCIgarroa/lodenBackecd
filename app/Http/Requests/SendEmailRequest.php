@@ -22,7 +22,26 @@ class SendEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mail' => 'required|email'
+            'mail' => 'required|email',
+            'phone_number' => 'required|numeric',
+            'full_name' => 'required|string',
+            'message' => 'required|string',
+            'event_id' => 'required',
+        ];
+
+    }
+    public function messages():array
+    {
+        return[
+            'full_name.required' => 'El nombre es requerido',
+            'full_name.string' => 'El campo nombre debe de ser letras',
+            'phone_number.required'=>'El campo número es requerido',
+            'phone_number.numeric'=>'Solo acepta números',
+            'message.required'=>'El mensaje es requerido',
+            'message.String'=>'El campo nombre debe de ser letras',
+            'event_id.required'=>'Debe de seleccionar un evento',
+            'mail.email'=>'Solo aceptan correos',
+            'mail.required'=>'El campo correo es requerido',
         ];
     }
 }

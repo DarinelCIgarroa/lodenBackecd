@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'team'], function () {
         Route::controller(TeamController::class)->group(function () {
             Route::post('/index', 'index');
-            Route::patch('/{team}', 'update');
+            Route::post('/{team}', 'update');
             Route::post('', 'store');
             Route::delete('/{team}', 'destroy');
         });

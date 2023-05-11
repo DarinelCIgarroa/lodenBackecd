@@ -10,21 +10,14 @@ use App\Models\Message;
 use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SendEmailRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HomeMessageController extends Controller
 {
-    public function sedEmailClient(Request $request)
+    public function sedEmailClient(SendEmailRequest $request)
     {
         try {
-
-            $request->validate([
-                'mail' => 'required|email',
-                'phone_number' => 'required|numeric',
-                'full_name' => 'required|string',
-                'message' => 'required|min:20|max:150|string',
-                'event_id' => 'required',
-            ]);
             $data = $request->all();
             $message = new Message();
             $message->fill($data);
@@ -33,9 +26,10 @@ class HomeMessageController extends Controller
             return response()->json([
                 'success' => true,
             ], 202);
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al enviar el correo',
+                'error' => $e->getMessage(),
                 'success' => false,
             ]);
         }

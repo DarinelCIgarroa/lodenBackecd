@@ -26,4 +26,14 @@ class Event extends Model
     public function Messages() {
         return $this->hasMany(Message::class);
     }
+    public function scopeSearch($query, $search)
+    {
+        return $query->when(!empty($search), function ($query) use ($search) {
+            if (isset($search) && !empty($search)) {
+                $query->where('type', 'like', '%' . $search . '%');
+                $query->orwhere('name', 'like', '%' . $search . '%');
+            }
+         });
+
+    }
 }
