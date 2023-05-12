@@ -64,11 +64,9 @@ class CompanyController extends Controller
             $company->fill($request->all());
 
             if ($request->hasFile('logo')) {
-                Storage::disk('users')->deleteDirectory('company');
+                Storage::disk('images')->deleteDirectory('company');
 
-                $path = $request->file('logo')->store('company', 'users');
-               // $file_name = basename($path);
-
+                $path = $request->file('logo')->store('company', 'images');
                 $company->logo = $path;
             }
             $company->save();

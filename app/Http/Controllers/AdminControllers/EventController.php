@@ -20,9 +20,10 @@ class EventController extends Controller
         try {
             $rows_page = $request->rows_page;
             $search= $request->search;
-              $events = Event::select('id', 'name', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')
-              ->search($search)
-              ->paginate($rows_page);
+              $events = Event::select('id', 'title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'type', 'status')
+                ->search($search)
+                ->paginate($rows_page);
+
             return response()->json([
                 'events' => $events,
                 'success' => true,
@@ -56,7 +57,7 @@ class EventController extends Controller
             $event->status = $request->status["code"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $path = $image->store('event-images', 'users');
+                $path = $image->store('event', 'images');
                 $event->image = $path;
             }
             $event->save();
@@ -68,24 +69,6 @@ class EventController extends Controller
             ], 202);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'message' => 'Error al crear el evento',
-                'error' => $e->getMessage(),
-                'success' => false,
-            ], 404);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function search(Event $event,Request $request)
-    {
-        //
-        try {
-            //code...
-            return "ok";
-        }catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Error al crear el evento',
                 'error' => $e->getMessage(),
@@ -114,9 +97,9 @@ class EventController extends Controller
                 $event->status = $request->status["code"];
             }
             if ($request->hasFile('image')) {
-                Storage::disk('users')->delete($imv);
+                Storage::disk('images')->delete($imv);
                 $image = $request->file('image');
-                $path = $image->store('event-images', 'users');
+                $path = $image->store('event', 'images');
                 $event->image = $path;
             }
             $event->save();

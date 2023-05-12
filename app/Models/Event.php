@@ -11,7 +11,7 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'title',
         'description',
         'start_date',
         'end_date',
@@ -31,7 +31,7 @@ class Event extends Model
         return $query->when(!empty($search), function ($query) use ($search) {
             if (isset($search) && !empty($search)) {
                 $query->where('type', 'like', '%' . $search . '%');
-                $query->orwhere('name', 'like', '%' . $search . '%');
+                $query->orWhere('title', 'like', '%' . $search . '%');
             }
          });
 
