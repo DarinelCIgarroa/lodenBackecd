@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\HomeControllers;
 
-use Exception;
+
 use App\Models\Team;
 use App\Models\Event;
 use App\Models\Company;
 use App\Models\Message;
 use App\Jobs\SendEmailJob;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SendEmailRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class HomeMessageController extends Controller
+class HomeController extends Controller
 {
     public function sedEmailClient(SendEmailRequest $request)
     {
@@ -38,7 +37,43 @@ class HomeMessageController extends Controller
     public function getHomeAllEvents()
     {
         try {
-            $events = Event::where('status', '=', '1')->get();
+            $events = Event::select('id', 'title')->where('status', true)->get();
+            return response()->json([
+                'success' => true,
+                'events' => $events,
+            ], 202);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Error al obtener registros',
+                'success' => false,
+            ]);
+        }
+    }
+
+    public function getHomeOnlineEvents()
+    {
+        try {
+            $events = Event::select('title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'status','type')
+                ->where('type', 'en-linea')->where('status', true)->get();
+
+            return response()->json([
+                'success' => true,
+                'events' => $events,
+            ], 202);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Error al obtener registros',
+                'success' => false,
+            ]);
+        }
+    }
+
+    public function getHomeInPersonEvents()
+    {
+        try {
+            $events = Event::select('title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'status','type')
+                ->where('type', 'presencial')->where('status', true)->get();
+
             return response()->json([
                 'success' => true,
                 'events' => $events,

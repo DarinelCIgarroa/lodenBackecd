@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeControllers\HomeMessageController;
+use App\Http\Controllers\HomeControllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +31,11 @@ Route::group(['prefix' => 'message'], function () {
 });
 
 Route::group(['prefix' => 'home'], function () {
-    Route::controller(HomeMessageController::class)->group(function () {
+    Route::controller(HomeController::class)->group(function () {
         Route::get('/company', 'getHomeCompany');
         Route::get('/get-events', 'getHomeAllEvents');
+        Route::get('/get-events-online', 'getHomeOnlineEvents');
+        Route::get('/get-events-in-person', 'getHomeInPersonEvents');
         Route::get('/get-members', 'getHomeMembers');
     });
 });

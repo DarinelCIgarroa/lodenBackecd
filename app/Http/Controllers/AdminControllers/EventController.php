@@ -54,7 +54,7 @@ class EventController extends Controller
         try {
             $event = new Event();
             $event->fill($request->all());
-            $event->status = $request->status["code"];
+            $event->status = $request->status["status"];
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $path = $image->store('event', 'images');
@@ -94,7 +94,7 @@ class EventController extends Controller
             $imv = $event->image;
             $event->fill($request->all());
             if (!Str::isJson($request->status)) {
-                $event->status = $request->status["code"];
+                $event->status = $request->status["status"];
             }
             if ($request->hasFile('image')) {
                 Storage::disk('images')->delete($imv);
