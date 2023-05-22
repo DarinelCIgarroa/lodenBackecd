@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\AdminControllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Event;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Traits\LocalStorageImage;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SendEventRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EventController extends Controller
 {
+    use LocalStorageImage;
     /**
      * Display a listing of the resource.
      */
@@ -55,11 +57,8 @@ class EventController extends Controller
             $event = new Event();
             $event->fill($request->all());
             $event->status = $request->status["status"];
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $path = $image->store('event', 'images');
-                $event->image = $path;
-            }
+            $path = $this->setImage($request, 'image', 'images', 'event');
+            $event->image = $path;
             $event->save();
 
             return response()->json([
@@ -91,17 +90,14 @@ class EventController extends Controller
     public function update(SendEventRequest $request, Event $event)
     {
         try {
-            $imv = $event->image;
+            $image = $event->image;
             $event->fill($request->all());
             if (!Str::isJson($request->status)) {
                 $event->status = $request->status["status"];
             }
-            if ($request->hasFile('image')) {
-                Storage::disk('images')->delete($imv);
-                $image = $request->file('image');
-                $path = $image->store('event', 'images');
-                $event->image = $path;
-            }
+            $path = $this->updateImage($request, 'image', $image, 'images', 'event');
+
+            $event->image = $path ?? $image;
             $event->save();
             return response()->json([
                 'event' => $event,
@@ -124,9 +120,7 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         try {
-            if ($event->image != null) {
-                Storage::disk('users')->delete($event->image);
-            }
+           $this->deleteImage($event, 'images');
             $event->delete();
 
             return response()->json([
@@ -142,9 +136,5 @@ class EventController extends Controller
                 'success' => false,
             ], 404);
         }
-    }
-    public function getEventImage()
-    {
-
     }
 }

@@ -5,13 +5,15 @@ use Exception;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
+use App\Traits\LocalStorageImage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTeamRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TeamController extends Controller
 {
+    use LocalStorageImage;
      /**
      * Display a listing of the resource.
      */
@@ -20,7 +22,7 @@ class TeamController extends Controller
         try {
 
             $rows_page = $request->rows_page;
-            $teams = Team::select('id', 'name','image' ,'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
+            $teams = Team::select('id', 'name', 'image' ,'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
                 ->paginate($rows_page);
 
             return response()->json([
@@ -53,11 +55,8 @@ class TeamController extends Controller
         try {
             $team = new team();
             $team->fill($request->all());
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $path = $image->store('team', 'images');
-                $team->image = $path;
-            }
+            $path = $this->setImage($request, 'image', 'images', 'team');
+            $team->image = $path;
             $team->save();
 
             return response()->json([
@@ -128,7 +127,7 @@ class TeamController extends Controller
     {
         try {
             if ($team->image != null) {
-                Storage::disk('users')->delete($team->image);
+                Storage::disk('images')->delete($team->image);
             }
             $team->delete();
 
