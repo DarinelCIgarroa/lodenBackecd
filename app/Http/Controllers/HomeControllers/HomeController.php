@@ -53,8 +53,12 @@ class HomeController extends Controller
     public function getHomeOnlineEvents()
     {
         try {
-            $events = Event::select('title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'status','type')
-                ->where('type', 'en-linea')->where('status', true)->get();
+            $events = Event::select('title', 'description', 'start_date', 'end_date', 'place', 'address', 'city', 'image', 'status', 'type')
+                ->orderBy('start_date', 'ASC')
+                ->where('start_date', '>=', now()->format('Y-m-d'))
+                ->where('type', 'en-linea')
+                ->where('status', true)
+                ->get();
 
             return response()->json([
                 'success' => true,
@@ -89,7 +93,7 @@ class HomeController extends Controller
     public function getHomeCompany()
     {
         try {
-            $company = Company::select('name', 'logo')->first();
+            $company = Company::select('name', 'city', 'state', 'zip_code', 'country', 'address', 'phone_number', 'email', 'logo')->first();
 
             return response()->json([
                 'company' => $company,
@@ -106,7 +110,7 @@ class HomeController extends Controller
     public function getHomeMembers()
     {
         try {
-            $members = Team::select('name', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
+            $members = Team::select('name', 'image', 'last_name', 'second_last_name', 'email', 'phone_number', 'instagram_link', 'facebook_link', 'intro', 'occupation')
                 ->limit(6)->get();
 
             return response()->json([

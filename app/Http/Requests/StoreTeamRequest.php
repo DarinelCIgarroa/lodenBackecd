@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTeamRequest extends FormRequest
@@ -21,18 +22,19 @@ class StoreTeamRequest extends FormRequest
      */
     public function rules(): array
     {
+        $team_id = $this->route('team');
+        $image_rules = $team_id ? [] : 'required|image|mimes:jpeg,png,jpg|max:2048';
         return [
             'name' => 'required|string',
             'last_name' => 'required',
             'second_last_name' => 'required',
-            'email' => 'required|email|unique:teams,email,except,id',
-            //'phone_number' => 'numeric|min_digits:10|max_digits:10',
-            'phone_number' => 'required',
+            'email' => ['required', 'email', Rule::unique('teams')->ignore($this->route('team'))],
+            'phone_number' => 'min_digits:10|max_digits:10',
             'instagram_link' => 'required|url',
             'facebook_link' => 'required|url',
             'intro' => 'required',
             'occupation' => 'required',
-            'image' => 'required',
+            'image' => $image_rules,
         ];
     }
 
@@ -51,15 +53,15 @@ class StoreTeamRequest extends FormRequest
             'email.required' => 'El correo electrónico es requerido',
             'email.unique' => 'El correo electrónico ya ha sido registrado',
             'phone_number.required' => 'El número de teléfono es requerido',
-           //'phone_number.min_digits' => 'El número de teléfono debe de tener diez digitos',
-            //'phone_number.max_digits' => 'El número de teléfono debe de tener diez digitos',
+            'phone_number.min_digits' => 'El número de teléfono debe de tener diez digitos',
+            'phone_number.max_digits' => 'El número de teléfono debe de tener diez digitos',
             'instagram_link.required' => 'El campo instagram debe de ser una URL',
             'instagram_link.url' => 'El campo instagram debe de ser un enlace',
             'facebook_link.required' => 'El campo facebook es requerido',
             'facebook_link.url' => 'El campo facebook debe de ser un enlace',
             'intro.required' => 'El campo descripción es requerido',
             'occupation.required' => 'El campo ocupación es requerido',
-            'image.required' => 'El logo es requerido',
+            'image.required' => 'La imagen es requerida',
         ];
     }
 }
